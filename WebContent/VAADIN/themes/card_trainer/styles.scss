@@ -1,0 +1,9 @@
+@import "addons.scss";
+@import "card_trainer.scss";
+
+/* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
+/* The actual styles should be defined in card_trainer.scss */
+.card_trainer {
+  @include addons;
+  @include card_trainer;
+}
