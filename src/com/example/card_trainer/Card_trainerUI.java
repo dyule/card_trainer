@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -28,10 +29,10 @@ import com.vaadin.ui.VerticalLayout;
 @Theme("card_trainer")
 public class Card_trainerUI extends UI implements DealDisplayer, ResultDisplayer {
 
-	@WebServlet(value = "/*", asyncSupported = true)
-	@VaadinServletConfiguration(productionMode = false, ui = Card_trainerUI.class)
-	public static class Servlet extends VaadinServlet {
-	}
+//	@WebServlet(value = "/*", asyncSupported = true)
+//	@VaadinServletConfiguration(productionMode = false, ui = Card_trainerUI.class)
+//	public static class Servlet extends VaadinServlet {
+//	}
 	
 
 	private Layout dealerLayout;
@@ -110,93 +111,85 @@ public class Card_trainerUI extends UI implements DealDisplayer, ResultDisplayer
 
 	@Override
 	protected void init(VaadinRequest request) {
+		ServletContext context = VaadinServlet.getCurrent().getServletContext();
+		CellSource source = new FileCellSource(context.getResourceAsStream("/basic_6deck_s17_DAS_SUR_PEEK.grid"));
 		
-		try {
-			String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
-			CellSource source = new FileCellSource(basepath + "/basic_6deck_s17_DAS_SUR_PEEK.grid");
+	
+	
+		final VerticalLayout layout = new VerticalLayout();
+		layout.setMargin(true);
+		layout.setSizeFull();
+		setContent(layout);
+		
+		dealerLayout = new HorizontalLayout();
+		dealerLayout.setHeight("90%");
+		playerLayout = new HorizontalLayout();
+		playerLayout.setHeight("90%");
+		
+		layout.addComponent(dealerLayout);
+		layout.addComponent(playerLayout);
+		layout.setExpandRatio(dealerLayout, 4);
+		layout.setExpandRatio(playerLayout, 4);
+		
+		final Trainer trainer = new Trainer(source, this, this);
+		
+		Button hit = new Button("Hit");
+		hit.addClickListener(new ClickListener() {
 			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				trainer.didHit();
+				
+			}
+		});
+		Button stay = new Button("Stay");
+		stay.addClickListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				trainer.didStay();
+				
+			}
+		});
+		Button dbl = new Button("Double");
+		dbl.addClickListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				trainer.didDouble();
+				
+			}
+		});
+		Button split = new Button("Split");
+		split.addClickListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				trainer.didSplit();
+				
+			}
+		});
+		Button surrender = new Button("Surrender");
+		surrender.addClickListener(new ClickListener() {
+			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				trainer.didSurrender();
+				
+			}
+		});
+		
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		
+		buttonLayout.addComponent(hit);
+		buttonLayout.addComponent(stay);
+		buttonLayout.addComponent(dbl);
+		buttonLayout.addComponent(split);
+		buttonLayout.addComponent(surrender);
 		
 		
-			final VerticalLayout layout = new VerticalLayout();
-			layout.setMargin(true);
-			layout.setSizeFull();
-			setContent(layout);
-			
-			dealerLayout = new HorizontalLayout();
-			dealerLayout.setHeight("90%");
-			playerLayout = new HorizontalLayout();
-			playerLayout.setHeight("90%");
-			
-			layout.addComponent(dealerLayout);
-			layout.addComponent(playerLayout);
-			layout.setExpandRatio(dealerLayout, 4);
-			layout.setExpandRatio(playerLayout, 4);
-			
-			final Trainer trainer = new Trainer(source, this, this);
-			
-			Button hit = new Button("Hit");
-			hit.addClickListener(new ClickListener() {
-				
-				@Override
-				public void buttonClick(ClickEvent event) {
-					trainer.didHit();
-					
-				}
-			});
-			Button stay = new Button("Stay");
-			stay.addClickListener(new ClickListener() {
-				
-				@Override
-				public void buttonClick(ClickEvent event) {
-					trainer.didStay();
-					
-				}
-			});
-			Button dbl = new Button("Double");
-			dbl.addClickListener(new ClickListener() {
-				
-				@Override
-				public void buttonClick(ClickEvent event) {
-					trainer.didDouble();
-					
-				}
-			});
-			Button split = new Button("Split");
-			split.addClickListener(new ClickListener() {
-				
-				@Override
-				public void buttonClick(ClickEvent event) {
-					trainer.didSplit();
-					
-				}
-			});
-			Button surrender = new Button("Surrender");
-			surrender.addClickListener(new ClickListener() {
-				
-				@Override
-				public void buttonClick(ClickEvent event) {
-					trainer.didSurrender();
-					
-				}
-			});
-			
-			HorizontalLayout buttonLayout = new HorizontalLayout();
-			
-			buttonLayout.addComponent(hit);
-			buttonLayout.addComponent(stay);
-			buttonLayout.addComponent(dbl);
-			buttonLayout.addComponent(split);
-			buttonLayout.addComponent(surrender);
-			
-			
-			layout.addComponent(buttonLayout);
-			
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		layout.addComponent(buttonLayout);
+
 		
 	}
 

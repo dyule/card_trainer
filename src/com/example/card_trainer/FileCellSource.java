@@ -2,6 +2,7 @@ package com.example.card_trainer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -33,8 +34,8 @@ public class FileCellSource implements CellSource {
 		}
 	}
 	
-	public FileCellSource(String filename) throws FileNotFoundException {
-		Scanner sc = new Scanner(new File(filename));
+	public FileCellSource(InputStream source) {
+		Scanner sc = new Scanner(source);
 		for (int pair = 0; pair < 10; pair += 1) {
 			for (int dealer = 0; dealer < 10; dealer += 1) {
 				String actionString = sc.next();
