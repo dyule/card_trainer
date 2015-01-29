@@ -127,7 +127,7 @@
     <echo message="widgetset is not set - skipping widgetset compilation"/>
   </target>
 	
-	<typedef name="webApp" classname="org.eclipse.jetty.ant.AntWebAppContext" classpathref="classpath" loaderref="jetty.loader" />
+	<typedef name="webApp" classname="org.eclipse.jetty.ant.AntWebAppContext" classpathref="classpath" loaderref="jetty.loader" onerror="ignore" />
 	  <taskdef classpathref="classpath" resource="tasks.properties" loaderref="jetty.loader" />
 	 
 	  <target name="jetty.run" depends="build-and-package">
@@ -140,8 +140,11 @@
         <mkdir dir="${junit.output.dir}"/>
         <junit fork="yes" printsummary="withOutAndErr"  haltonfailure="yes" haltonerror="yes">
             <formatter type="xml"/>
-            <test name="com.example.card_trainer.CardSource_test" todir="${junit.output.dir}"/>
-            <test name="com.example.card_trainer.Card_trainerTest" todir="${junit.output.dir}"/>
+        	<batchtest todir="${junit.output.dir}">
+        	       <fileset dir="${compiled-tests.dir}">
+        	       		<include name="**/*Test*" />
+        	       </fileset>
+        	    </batchtest>
             <classpath refid="classpath"/>
         	<classpath path="${compiled-classes.dir}"/>
         	<classpath path="${compiled-tests.dir}"/>
