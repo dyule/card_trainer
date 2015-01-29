@@ -2,10 +2,14 @@
 <project basedir="." default="build-and-package" xmlns:ivy="antlib:org.apache.ivy.ant" name="Build script for Vaadin 7 projects">
 
   <loadproperties srcfile="build.properties"/>
+  <loadproperties srcfile="${user.home}/.userdata.properties"></loadproperties>
   <property name="workdir" value="${artifacts}/work"/>
   <property name="compiled-classes.dir" value="${workdir}/WEB-INF/classes"/>
+  <property name="compiled-tests.dir" value="${workdir}/tests/classes"/>
   <property name="warfilename" value="webapp.war"/>
   <property name="ivy.dir" value="ivy_libs" />
+  <property name="ant.build.javac.source" value="1.7"/>
+  <property name="ant.build.javac.target" value="1.7"/>
 
 	<target name="ivy">
   		<ivy:retrieve pattern="${ivy.dir}/[conf]/[artifact].[ext]" sync="true"/>
@@ -80,6 +84,15 @@
       <classpath refid="classpath"/>
     </javac>
   </target>
+	
+	<target name="compile-tests" depends="compile-project">
+	    <mkdir dir="${compiled-tests.dir}"/>
+	    <javac destdir="${compiled-tests.dir}" debug="${compile.debug}" includeantruntime="no">
+	      <src path="${tests}"/>
+	      <classpath refid="classpath"/>
+	    	<classpath path="${compiled-classes.dir}"/>
+	    </javac>
+	  </target>
 
   <target name="compile-widgetset" depends="compile-project, -build-widgetset-1, -build-widgetset-2">
     <!-- the dependencies do all the work here -->
@@ -113,6 +126,35 @@
   <target name="-build-widgetset-2" unless="widgetset">
     <echo message="widgetset is not set - skipping widgetset compilation"/>
   </target>
+	
+	<typedef name="webApp" classname="org.eclipse.jetty.ant.AntWebAppContext" classpathref="classpath" loaderref="jetty.loader" />
+	  <taskdef classpathref="classpath" resource="tasks.properties" loaderref="jetty.loader" />
+	 
+	  <target name="jetty.run" depends="build-and-package">
+	  	<jetty.run daemon="true">
+	  	      <webApp war="${artifacts}/${warfilename}" contextPath="/"/>
+	  	    </jetty.run>
+	  </target>
+	
+    <target name="test" depends="compile-tests, jetty.run" >
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr"  haltonfailure="yes" haltonerror="yes">
+            <formatter type="xml"/>
+            <test name="com.example.card_trainer.CardSource_test" todir="${junit.output.dir}"/>
+            <test name="com.example.card_trainer.Card_trainerTest" todir="${junit.output.dir}"/>
+            <classpath refid="classpath"/>
+        	<classpath path="${compiled-classes.dir}"/>
+        	<classpath path="${compiled-tests.dir}"/>
+        </junit>
+    </target>
+    <target name="testreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
 
   <target name="package-war" depends="-init" description="Packages everything in a WAR that has been deployed in ${workdir}">
     <mkdir dir="${workdir}/WEB-INF/lib"/>
@@ -146,10 +188,12 @@
     </war>
   </target>
 	
-  <target name="deploy" depends="package-war" description="Deploys the project to the remote production server">
+  <target name="deploy" depends="test" description="Deploys the project to the remote production server">
   	<scp file="${artifacts}/${warfilename}" todir="${username}:${password}@mega.cs.dal.ca:/opt/apache-tomcat-7.0.57/webapps" trust="yes" />
   	</target>
 
   <target name="build-and-package" depends="compile-theme, compile-project, compile-widgetset, package-war">
   </target>
+	
+
 </project>

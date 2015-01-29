@@ -12,7 +12,7 @@ public class CardSource_test extends TestCase {
 
 	@Test
 	public void testExhaustive() throws FileNotFoundException {
-		CellSource source = new FileCellSource(new FileInputStream(new File("WebContent/basic_6deck_s17_DAS_SUR_PEEK.grid")));
+		CellSource source = new FileCellSource(new FileInputStream(new File("WebContent/VAADIN/resources/basic_6deck_s17_DAS_SUR_PEEK.grid")));
 		int count = 0;
 		for (Cell cell : source) {
 			count += 1;

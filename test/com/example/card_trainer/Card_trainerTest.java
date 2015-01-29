@@ -11,12 +11,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * This class contains JUnit tests, which are run using Vaadin TestBench 4.
@@ -36,7 +39,7 @@ public class Card_trainerTest extends TestBenchTestCase {
 
     @Before
     public void setUp() throws Exception {
-        driver = new FirefoxDriver(); // Firefox
+        driver = new PhantomJSDriver(); // Firefox
         page = PageFactory.initElements(driver, TrainerPage.class);
 
         // To use Chrome, first install chromedriver.exe from
@@ -94,7 +97,7 @@ public class Card_trainerTest extends TestBenchTestCase {
     private void testActionButton(ButtonElement button) {
     	button.click();
     	NotificationElement notification = page.getNotification();
-    	assertNotNull(notification);
+    	assertNull(notification);
     	notification.close();
     }
 }
