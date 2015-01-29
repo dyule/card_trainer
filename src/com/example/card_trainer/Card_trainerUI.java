@@ -112,7 +112,7 @@ public class Card_trainerUI extends UI implements DealDisplayer, ResultDisplayer
 	@Override
 	protected void init(VaadinRequest request) {
 		ServletContext context = VaadinServlet.getCurrent().getServletContext();
-		CellSource source = new FileCellSource(context.getResourceAsStream("/basic_6deck_s17_DAS_SUR_PEEK.grid"));
+		CellSource source = new FileCellSource(context.getResourceAsStream("/VAADIN/resources/basic_6deck_s17_DAS_SUR_PEEK.grid"));
 		
 	
 	
