@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import junit.framework.TestCase;
 
-public class CardSource_test extends TestCase {
+public class CardSourceTest extends TestCase {
 
 	@Test
 	public void testExhaustive() throws FileNotFoundException {

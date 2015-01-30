@@ -12,6 +12,7 @@
   <property name="ant.build.javac.target" value="1.7"/>
 
 	<target name="ivy">
+		<mkdir dir="${ivy.dir}" />
   		<ivy:retrieve pattern="${ivy.dir}/[conf]/[artifact].[ext]" sync="true"/>
 	</target>
 	<target name="clean-ivy">
@@ -126,11 +127,11 @@
   <target name="-build-widgetset-2" unless="widgetset">
     <echo message="widgetset is not set - skipping widgetset compilation"/>
   </target>
-	
-	<typedef name="webApp" classname="org.eclipse.jetty.ant.AntWebAppContext" classpathref="classpath" loaderref="jetty.loader" onerror="ignore" />
-	  <taskdef classpathref="classpath" resource="tasks.properties" loaderref="jetty.loader" />
-	 
 	  <target name="jetty.run" depends="build-and-package">
+	
+		<typedef name="webApp" classname="org.eclipse.jetty.ant.AntWebAppContext" classpathref="classpath" loaderref="jetty.loader" onerror="ignore" />
+	    <taskdef classpathref="classpath" resource="tasks.properties" loaderref="jetty.loader" />
+	 
 	  	<jetty.run daemon="true">
 	  	      <webApp war="${artifacts}/${warfilename}" contextPath="/"/>
 	  	    </jetty.run>

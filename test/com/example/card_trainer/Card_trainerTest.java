@@ -97,7 +97,7 @@ public class Card_trainerTest extends TestBenchTestCase {
     private void testActionButton(ButtonElement button) {
     	button.click();
     	NotificationElement notification = page.getNotification();
-    	assertNull(notification);
+    	assertNotNull(notification);
     	notification.close();
     }
 }
