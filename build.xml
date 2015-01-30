@@ -128,14 +128,18 @@
     <echo message="widgetset is not set - skipping widgetset compilation"/>
   </target>
 	  <target name="jetty.run" depends="build-and-package">
-	
+		
 		<typedef name="webApp" classname="org.eclipse.jetty.ant.AntWebAppContext" classpathref="classpath" loaderref="jetty.loader" onerror="ignore" />
 	    <taskdef classpathref="classpath" resource="tasks.properties" loaderref="jetty.loader" />
 	 
 	  	<jetty.run daemon="true">
-	  	      <webApp war="${artifacts}/${warfilename}" contextPath="/"/>
-	  	    </jetty.run>
-	  </target>
+	  		<systemProperties>
+	  			<systemProperty name="org.eclipse.jetty.LEVEL" value="WARN" />
+	  			<systemProperty name="org.eclipse.jetty.util.log.class" value="org.eclipse.jetty.util.log.StrErrLog" />
+	  		</systemProperties>
+	  	    <webApp war="${artifacts}/${warfilename}" contextPath="/"/>
+	  </jetty.run>
+  </target>
 	
     <target name="test" depends="compile-tests, jetty.run" >
         <mkdir dir="${junit.output.dir}"/>
