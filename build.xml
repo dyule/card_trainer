@@ -3,6 +3,7 @@
 
   <loadproperties srcfile="build.properties"/>
   <loadproperties srcfile="${user.home}/.userdata.properties"></loadproperties>
+
   <property name="workdir" value="${artifacts}/work"/>
   <property name="compiled-classes.dir" value="${workdir}/WEB-INF/classes"/>
   <property name="compiled-tests.dir" value="${workdir}/tests/classes"/>
@@ -13,10 +14,12 @@
 
 	<target name="ivy">
 		<mkdir dir="${ivy.dir}" />
-  		<ivy:retrieve pattern="${ivy.dir}/[conf]/[artifact].[ext]" sync="true"/>
+                <!--<ivy:settings />-->
+  		<ivy:retrieve pattern="${ivy.dir}/[conf]/[artifact].[ext]" sync="true" type="jar,bundle" />
 	</target>
 	<target name="clean-ivy">
 		<delete dir="${ivy.dir}"/>
+                <ivy:cleancache />
 	</target>
 
   <path id="classpath">
@@ -143,7 +146,7 @@
 	
     <target name="test" depends="compile-tests, jetty.run" >
         <mkdir dir="${junit.output.dir}"/>
-        <junit fork="yes" printsummary="withOutAndErr"  haltonfailure="yes" haltonerror="yes">
+        <junit fork="yes" printsummary="withOutAndErr"  haltonfailure="yes" haltonerror="yes" maxmemory="1024m" forkmode="once">
             <formatter type="xml"/>
         	<batchtest todir="${junit.output.dir}">
         	       <fileset dir="${compiled-tests.dir}">

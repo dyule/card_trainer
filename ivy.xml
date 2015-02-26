@@ -17,6 +17,10 @@
 		<conf name="nodeploy" />
 	</configurations>
 	<dependencies defaultconf="default" defaultconfmapping="default->default">
+
+		<!-- Broken Stuff -->
+		<dependency org="com.vaadin.external.atmosphere" name="atmosphere-runtime" rev="2.2.4.vaadin2" />
+               <dependency org="com.google.guava" name="guava" rev="15.0" />
 		<!-- The core server part of Vaadin -->
 		<dependency org="com.vaadin" name="vaadin-server" rev="&vaadin.version;" />
 
@@ -30,7 +34,7 @@
 		<dependency org="javax.servlet" name="javax.servlet-api" rev="3.0.1" conf="nodeploy->default" />
 
 		<!-- TestBench 4 -->
-		<dependency org="com.vaadin" name="vaadin-testbench-api" rev="latest.release" conf="nodeploy -> default" />
+		<dependency org="com.vaadin" name="vaadin-testbench-api" rev="&vaadin.version;" conf="nodeploy -> default" />
 
 		<!-- Precompiled DefaultWidgetSet -->
 		<dependency org="com.vaadin" name="vaadin-client-compiled"
@@ -43,7 +47,6 @@
 		<!-- Compiler for custom widget sets. Should not be deployed -->
 		<dependency org="com.vaadin" name="vaadin-client-compiler"
 			rev="&vaadin.version;" conf="widgetset-compile->default" />
-			
 		<!-- Jetty for integration testing -->
 		<dependency org="org.eclipse.jetty" name="jetty-server" rev="9.2.7.v20150116" conf="nodeploy->default" />
 		<dependency org="org.eclipse.jetty" name="jetty-ant" rev="9.2.7.v20150116" conf="nodeploy->default" />
